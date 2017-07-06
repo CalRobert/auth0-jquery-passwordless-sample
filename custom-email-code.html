@@ -46,52 +46,74 @@
       </div>
     </div>
 
-    <script src="https://cdn.auth0.com/w2/auth0-6.7.min.js"></script>
+    <script src="https://cdn.auth0.com/js/auth0/8.8.0/auth0.min.js"></script>
     <script type="text/javascript">
       // Initialize Auth0 Client instance
-      var auth0 = new Auth0({
-        // All these properties are set in auth0-variables.js
-        clientID: AUTH0_CLIENT_ID,
-        domain: AUTH0_DOMAIN
+      var webAuth = new auth0.WebAuth({
+        clientID: AUTH0_CLIENT_ID, 
+        domain: AUTH0_DOMAIN,
+        redirectUri: 'http://localhost:3000/custom-email-code.html',
+        responseType: 'token'
       });
 
+      // Submit email to begin Passwordless transaction
       function sendEmail(){
         var email = $('input.email').val();
-        auth0.requestEmailCode({ email:email }, function(err) {
+        webAuth.passwordlessStart({
+          connection: 'email',
+          send: 'code',
+          email: email
+        }, function(err,res) {
           if (err) {
-            console.log('error sending e-mail',err.error_description);
-            alert(`error sending e-mail: ${err.error_description}`);
+            alert('error sending email: '+ err.error_description);
             return;
           }
-          // the request was successful and you should 
-          // receive the code to the specified email
           $('.enter-email').hide();
           $('.enter-code').show();
         });
-      }
+      };
 
+      // Submit the passcode to complete authentication
       function login(){
+        console.log('logging in...');
         var email = $('input.email').val();
-        var code= $('input.code').val();
+        var code = $('input.code').val();
+        webAuth.passwordlessVerify({
+          connection: 'email',
+          email: email,
+          verificationCode: code
+        }, function (err,res) {
+          if (err){
+            console.log('error logging-in',err);
+            alert('Couldn\'t login ' + err.message);
+          }
+        });
+      };
 
-        //submit the passcode to complete authentication
-        auth0.verifyEmailCode({ email: email, code: code }, function(err, profile, id_token, access_token) {
-            if (err){
-              console.log('error logging-in',err);
-              alert('Couldn\'t login ' + err.message);
-            } else {
-              console.log('profile',profile);
-              console.log('id_token',id_token);
-              console.log('access_token',access_token);
-              localStorage.setItem('userToken', id_token);
-              $('.login-box').hide();
-              $('.logged-in-box').show();
-              $('.nickname').text(profile.name);
-              $('.avatar').attr('src', profile.picture);
+      // Check for returned token and parse 
+      $(document).ready(function() {
+        if(window.location.hash){
+          webAuth.parseHash(window.location.hash, function(err, authResult) {
+            if (err) {
+              return console.log(err);
+            } else if (authResult){
+              localStorage.setItem('accessToken', authResult.accessToken);
+              webAuth.client.userInfo(authResult.accessToken, function(err, user) {
+                if (err){
+                  console.log('err',err);
+                  alert('There was an error retrieving your profile: ' + err.message);
+                } else {
+                  $('.login-box').hide();
+                  $('.logged-in-box').show();
+                  localStorage.setItem('user', user);
+                  $('.nickname').text(user.nickname);
+                  $('.avatar').attr('src', user.picture);
+                }
+              });
             }
           });
-      }
-
+        }
+      });
     </script>
   </body>
 </html>
