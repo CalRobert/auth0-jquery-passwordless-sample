@@ -2,7 +2,6 @@
 <html>
   <head>
     <meta charset="utf-8">   
-
     <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 
     <script src="//use.typekit.net/iws6ohy.js"></script>
@@ -13,9 +12,9 @@
     <!-- font awesome from BootstrapCDN -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="app.css" rel="stylesheet">
 
     <script src="auth0-variables.js"> </script>
-    <link href="app.css" rel="stylesheet">
   </head>
   <body class="home">
     <div class="container">
@@ -24,7 +23,14 @@
           <img class="logo" src="https://i.cloudup.com/StzWWrY34s.png" />
           <h3>Auth0 Passwordless Example</h3>
           <p>Login with a Magic Link sent by Email</p>
-          <div class="alert alert-warning">Don't forget to add your page's URL <strong><script type="text/javascript">document.write(location.href)</script></strong> to your App's <strong>Allowed Callback URLs</strong> list in the <a target="_blank" href="https://manage.auth0.com">Auth0 dashboard</a></div>
+          <div class="alert alert-warning">Don't forget to add your page's origin 
+            <strong><script type="text/javascript">document.write(location.origin)</script></strong> 
+            to your App's <strong>Allowed Origins (CORS)</strong>        
+            and 
+              <strong><script type="text/javascript">document.write(location.href)</script></strong> 
+            to the <strong>Allowed Callback URLs</strong> list 
+            in the <a target="_blank" href="https://manage.auth0.com">Auth0 dashboard.</a>
+          </div>
           <button onclick="login()" class="btn btn-primary btn-lg btn-login btn-block">SignIn</button>
         </div>
         <div class="logged-in-box auth0-box logged-in" style="display: none;">
@@ -36,6 +42,7 @@
     </div>
     <script src="http://cdn.auth0.com/js/lock-passwordless-2.2.3.min.js"></script>
     <script type="text/javascript">
+
       // Initialize Passwordless Lock instance
       var lock = new Auth0LockPasswordless(
         // All these properties are set in auth0-variables.js
@@ -48,7 +55,6 @@
       }
 
       $(document).ready(function() {
-
         var hash = lock.parseHash(window.location.hash);
 
         if (hash && hash.error) {
@@ -72,8 +78,6 @@
             }
           });
         }
-
-
       });
     </script>
   </body>
