@@ -2,6 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    
     <script src="//use.typekit.net/iws6ohy.js"></script>
     <script>try{Typekit.load();}catch(e){}</script>
 
@@ -21,8 +23,15 @@
           <img class="logo" src="https://i.cloudup.com/StzWWrY34s.png" />
           <h3>Auth0 Passwordless Example</h3>
           <p>Login with SMS</p>
-          <div class="alert alert-warning">Don't forget to add your page's origin <strong><script type="text/javascript">document.write(location.origin)</script></strong> to your App's <strong>Allowed Origins (CORS)</strong> in the <a target="_blank" href="https://manage.auth0.com">Auth0 dashboard</a>, unless it is already in the list of <strong>Allowed Callback URLs.</strong></div>
-          <a ng-click="login()" class="btn btn-primary btn-lg btn-login btn-block">SignIn</a>
+            <div class="alert alert-warning">Don't forget to add your page's origin 
+              <strong><script type="text/javascript">document.write(location.origin)</script></strong> 
+              to your App's <strong>Allowed Origins (CORS)</strong>        
+              and 
+               <strong><script type="text/javascript">document.write(location.href)</script></strong> 
+              to the <strong>Allowed Callback URLs</strong> list 
+              in the <a target="_blank" href="https://manage.auth0.com">Auth0 dashboard.</a>
+            </div>
+          <button onclick="login()" class="btn btn-primary btn-lg btn-login btn-block">SignIn</button>
         </div>
         <div class="logged-in-box auth0-box logged-in" style="display: none;">
           <h1 id="logo"><img src="auth0_logo_final_blue_RGB.png" /></h1>
@@ -31,37 +40,49 @@
         </div>
       </div>
     </div>
-    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="http://cdn.auth0.com/js/lock-passwordless-2.2.3.min.js"></script>
     <script type="text/javascript">
+
+      // Initialize Passwordless Lock instance
+      var lock = new Auth0LockPasswordless(
+        // All these properties are set in auth0-variables.js
+        AUTH0_CLIENT_ID,
+        AUTH0_DOMAIN
+      );
+
+      function login() {
+        var opts = {
+          callbackURL: 'http://localhost:3000/lock-sms.html',
+          responseType: 'token'
+        };
+        
+        lock.sms(opts);      
+      }
+
       $(document).ready(function() {
-        $('.btn-login').click(function(e) {
-          e.preventDefault();
+        var hash = lock.parseHash(window.location.hash);
 
-          // Initialize Passwordless Lock instance
-          var lock = new Auth0LockPasswordless(
-            // All these properties are set in auth0-variables.js
-            AUTH0_CLIENT_ID,
-            AUTH0_DOMAIN
-          );
-
-          var appearanceOpts = {
-            autoclose: true
-          };
-          
-          // Open the lock in SMS mode with the ability to handle the authentication in page
-          lock.sms(appearanceOpts,function (err, profile, id_token, access_token, state, refresh_token) {
-            if (!err){
-              // Save the JWT token.
-              localStorage.setItem('userToken', id_token);
-              console.log('profile',profile);
-              $('.login-box').hide();
-              $('.logged-in-box').show();
+        if (hash && hash.error) {
+          alert('There was an error: ' + hash.error + '\n' + hash.error_description);
+        }
+        else if (hash && hash.id_token) {
+          //save the token in local storage:
+          localStorage.setItem('id_token', hash.id_token);
+          console.log('hash',hash);
+          $('.login-box').hide();
+          $('.logged-in-box').show();
+          //retrieve profile
+          lock.getProfile(hash.id_token, function (err, profile) {
+            if (err){
+              console.log('err',err);
+              alert('There was an error retrieving your profile: ' + err.message);
+            } else {
+              localStorage.setItem('profile', profile);
               $('.nickname').text(profile.name);
               $('.avatar').attr('src', profile.picture);
             }
           });
-        });
+        }
       });
     </script>
   </body>
