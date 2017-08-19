@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <script src="https://cdn.auth0.com/js/auth0/8.8.0/auth0.min.js"></script>
+    <script src="https://cdn.auth0.com/js/auth0/8.9.2/auth0.min.js"></script>
     <script type="text/javascript">
       // Initialize Auth0 Client instance
       var webAuth = new auth0.WebAuth({
@@ -57,7 +57,7 @@
       });
 
       // Submit email to begin Passwordless transaction
-      function sendEmail(){
+      function sendEmail() {
         var email = $('input.email').val();
         webAuth.passwordlessStart({
           connection: 'email',
@@ -74,11 +74,11 @@
       };
 
       // Submit the passcode to complete authentication
-      function login(){
+      function login() {
         console.log('logging in...');
         var email = $('input.email').val();
         var code = $('input.code').val();
-        webAuth.passwordlessVerify({
+        webAuth.passwordlessLogin({
           connection: 'email',
           email: email,
           verificationCode: code
@@ -91,7 +91,7 @@
       };
 
       // Check for returned token and parse 
-      $(document).ready(function() {
+      $(function() {
         if(window.location.hash){
           webAuth.parseHash(window.location.hash, function(err, authResult) {
             if (err) {

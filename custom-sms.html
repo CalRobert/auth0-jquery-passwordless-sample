@@ -44,7 +44,7 @@
         </div>
       </div>
     </div>
-    <script src="https://cdn.auth0.com/js/auth0/8.8.0/auth0.min.js"></script>
+    <script src="https://cdn.auth0.com/js/auth0/8.9.2/auth0.min.js"></script>
     <script type="text/javascript">
       // Initialize Auth0 Client instance
       var webAuth = new auth0.WebAuth({
@@ -55,7 +55,7 @@
       });
 
       // Submit phone number to begin Passwordless transaction
-      function sendSMS(){
+      function sendSMS() {
         var phoneNumber = $('input.phone-number').val();
         webAuth.passwordlessStart({
           connection: 'sms',
@@ -72,10 +72,10 @@
       };
 
       // Submit the passcode to complete authentication
-      function login(){
+      function login() {
         var phoneNumber = $('input.phone-number').val();
         var code = $('input.code').val();
-        webAuth.passwordlessVerify({
+        webAuth.passwordlessLogin({
           connection: 'sms',
           phoneNumber: phoneNumber,
           verificationCode: code
@@ -88,22 +88,22 @@
       };
 
       // Check for returned token and parse 
-      $(document).ready(function() {
+      $(function() {
         if(window.location.hash){
           webAuth.parseHash(window.location.hash, function(err, authResult) {
             if (err) {
               return console.log(err);
-            } else if (authResult){
+            } else if (authResult) {
               localStorage.setItem('accessToken', authResult.accessToken);
               webAuth.client.userInfo(authResult.accessToken, function(err, user) {
-                if (err){
+                if (err) {
                   console.log('err',err);
                   alert('There was an error retrieving your profile: ' + err.message);
                 } else {
                   $('.login-box').hide();
                   $('.logged-in-box').show();
                   localStorage.setItem('user', user);
-                  $('.nickname').text(user.nickname);
+                  $('.nickname').text(user.nickname || user.phone_number );
                   $('.avatar').attr('src', user.picture);
                 }
               });
