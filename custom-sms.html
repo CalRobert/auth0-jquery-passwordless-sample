@@ -63,7 +63,7 @@
           phoneNumber: phoneNumber
         }, function(err,res) {
           if (err) {
-            alert('error sending SMS: '+ err.error_description);
+            alert('error sending SMS: '+ err.description);
             return;
           }
           $('.enter-phone').hide();

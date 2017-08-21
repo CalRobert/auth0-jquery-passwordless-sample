@@ -62,7 +62,7 @@
           email: email
         }, function(err,res) {
           if (err) {
-            alert('error sending email: '+ err.error_description);
+            alert('error sending email: '+ err.description);
             return;
           }
           alert('Email sent!');
