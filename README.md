@@ -28,7 +28,22 @@ You can read more about Passwordless Authentication on our [documentation Site](
 	```
 	> You can get the `{CLIENT_ID}` and `{DOMAIN}` values from the [Auth0 Dashboard](https://manage.auth0.com).
 
-2. In your App's configuration on the [Auth0 Dashboard](https://manage.auth0.com), add `http://localhost:3000` to the **Allowed Origins (CORS)** list in order for the one time code samples to work, and add `http://localhost:3000/custom-magic-link.html, http://localhost:3000/custom-email-code.html, http://localhost:3000/lock-magic-link.html, http://localhost:3000/lock-sms.html, http://localhost:3000/lock-email-code.html` to the **Allowed Callback URLs** list for the magic link samples to function. 
+2. In your Client settings in the [Dashboard](https://manage.auth0.com), add the following to the **Allowed Origins (CORS)** list in order for the one time code samples to work:
+
+```
+http://localhost:3000
+```
+
+You will also need to add the following to the **Allowed Callback URLs** list for the magic link samples to function: 
+
+```
+http://localhost:3000/custom-magic-link.html, 
+http://localhost:3000/custom-email-code.html, 
+http://localhost:3000/lock-magic-link.html, 
+http://localhost:3000/lock-sms.html, 
+http://localhost:3000/lock-email-code.html
+```
+
 3. Initialize a web server in the samples folder. You can do it for instance with `serve`:
 	* Install node version 6 (using `nvm`)
 	* run `npm install -g serve`
