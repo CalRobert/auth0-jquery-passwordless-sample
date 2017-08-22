@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
     <script src="//use.typekit.net/iws6ohy.js"></script>
     <script>try{Typekit.load();}catch(e){}</script>
@@ -24,7 +24,20 @@
           <h3>Auth0 Passwordless Example</h3>
           <p>Login with Email Code</p>
           <div class="enter-email">
-            <div class="alert alert-warning">Don't forget to add your page's origin <strong><script type="text/javascript">document.write(location.origin)</script></strong> to your App's <strong>Allowed Origins (CORS)</strong> in the <a target="_blank" href="https://manage.auth0.com">Auth0 dashboard</a>, unless it is already in the list of <strong>Allowed Callback URLs.</strong>
+            <div class="alert alert-warning">
+              <p>
+                  In your Client settings in the <a target="_blank" href="https://manage.auth0.com">Dashboard</a>,
+                  add the following to the Allowed Origins (CORS) list in order for the one time code samples to work:
+              </p>
+              <p>
+                  <strong><script type="text/javascript">document.write(location.origin)</script></strong>
+              </p>
+              <p>
+                  You will also need to add the following to the Allowed Callback URLs list:
+              </p>
+              <p>
+                <strong><script type="text/javascript">document.write(location.href)</script></strong>
+              </p>
             </div>
             <label>Enter your email: </label>
             <input class="email"/>
