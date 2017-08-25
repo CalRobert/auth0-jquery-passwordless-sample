@@ -66,7 +66,8 @@
         clientID: AUTH0_CLIENT_ID, 
         domain: AUTH0_DOMAIN,
         redirectUri: 'http://localhost:3000/custom-email-code.html',
-        responseType: 'token'
+        responseType: 'token',
+        scope: 'openid profile'
       });
 
       // Submit email to begin Passwordless transaction

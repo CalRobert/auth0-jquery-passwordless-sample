@@ -57,7 +57,12 @@
   <script>
     var options = {
       oidcConformant: true,
-      allowedConnections: ["sms"] //only needed if you have both email and sms enabled in the dashboard
+      allowedConnections: ["sms"], //only needed if you have both email and sms enabled in the dashboard
+      auth: {
+        params: {
+          scope: "openid profile"
+        }
+      }
     };
     //AUTH0_CLIENT_ID and AUTH0_DOMAIN are defined in the auth0-variables.js file.
     var lock = new Auth0LockPasswordless(AUTH0_CLIENT_ID, AUTH0_DOMAIN, options);
