@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
     <script src="//use.typekit.net/iws6ohy.js"></script>
     <script>try{Typekit.load();}catch(e){}</script>
@@ -23,7 +23,21 @@
           <img class="logo" src="https://i.cloudup.com/StzWWrY34s.png" />
           <h3>Auth0 Passwordless Example</h3>
           <p>Login with a Magic Link sent to your email</p>
-          <div class="alert alert-warning">Don't forget to add your page's URL <strong><script type="text/javascript">document.write(location.href)</script></strong> to your App's <strong>Allowed Callback URLs</strong> list in the <a target="_blank" href="https://manage.auth0.com">Auth0 dashboard</a></div>
+          <div class="alert alert-warning">
+            <p>
+                In your Client settings in the <a target="_blank" href="https://manage.auth0.com">Dashboard</a>,
+                add the following to the Allowed Origins (CORS) list in order for the one time code samples to work:
+            </p>
+            <p>
+                <strong><script type="text/javascript">document.write(location.origin)</script></strong>
+            </p>
+            <p>
+                You will also need to add the following to the Allowed Callback URLs list:
+            </p>
+            <p>
+              <strong><script type="text/javascript">document.write(location.href)</script></strong>
+            </p>
+          </div>
           <div class="enter-phone">
             <label>Enter your email:</label>
             <input class="email"/>
@@ -43,18 +57,19 @@
       </div>
     </div>
 
-    <script src="https://cdn.auth0.com/js/auth0/8.8.0/auth0.min.js"></script>
+    <script src="https://cdn.auth0.com/js/auth0/9.2/auth0.min.js"></script>
     <script type="text/javascript">
       // Initialize Auth0 Client instance
       var webAuth = new auth0.WebAuth({
         clientID: AUTH0_CLIENT_ID, 
         domain: AUTH0_DOMAIN,
         redirectUri: 'http://localhost:3000/custom-email-code.html',
-        responseType: 'token'
+        responseType: 'token',
+        scope: 'openid profile'
       });
 
       // Submit email to begin Passwordless transaction
-      function sendMagicLink(){
+      function sendMagicLink() {
         var email = $('input.email').val();
         webAuth.passwordlessStart({
           connection: 'email',
@@ -62,7 +77,7 @@
           email: email
         }, function(err,res) {
           if (err) {
-            alert('error sending email: '+ err.error_description);
+            alert('error sending email: '+ err.description);
             return;
           }
           alert('Email sent!');
@@ -70,7 +85,7 @@
       };
 
       // Check for returned token and parse 
-      $(document).ready(function() {
+      $(function() {
         if(window.location.hash){
           webAuth.parseHash(window.location.hash, function(err, authResult) {
             if (err) {
