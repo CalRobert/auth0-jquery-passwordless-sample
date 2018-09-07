@@ -28,24 +28,23 @@ You can read more about Passwordless Authentication on our [documentation Site](
 	```
 	> You can get the `{CLIENT_ID}` and `{DOMAIN}` values from the [Auth0 Dashboard](https://manage.auth0.com).
 
-2. In your Client settings in the [Dashboard](https://manage.auth0.com), add the following to the **Allowed Origins (CORS)** list in order for the one time code samples to work:
+2. In your Client settings in the [Dashboard](https://manage.auth0.com), add the following to the **Allowed Web Origins** list in order for the one time code samples to work:
 
 ```
 http://localhost:3000
 ```
 
-You will also need to add the following to the **Allowed Callback URLs** list for the magic link samples to function: 
+You will also need to add the following to the **Allowed Callback URLs** list for the magic link samples to function:
 
 ```
-http://localhost:3000/custom-magic-link.html, 
-http://localhost:3000/custom-email-code.html, 
-http://localhost:3000/lock-magic-link.html, 
-http://localhost:3000/lock-sms.html, 
+http://localhost:3000/custom-magic-link.html,
+http://localhost:3000/custom-email-code.html,
+http://localhost:3000/lock-magic-link.html,
+http://localhost:3000/lock-sms.html,
 http://localhost:3000/lock-email-code.html
 ```
 
-3. Initialize a web server in the samples folder. You can do it for instance with `serve`:
-	* Install node version 6 (using `nvm`)
-	* run `npm install -g serve`
-	* run `serve -p 3000` in the project's folder to start a server
-4. Go to the [index page](http://localhost:3000) and select the scenario you want to try. 
+
+3. Initialize a web server in the samples folder. You can do it in one line with `python -m SimpleHTTPServer 3000`.
+	* If you use Node's `serve` module, you'll need to add the above callback url's without `.html` due to its use of "clean" url's
+4. Go to the [index page](http://localhost:3000) and select the scenario you want to try.
